@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <locale.h>
 
 int is_defined(double x) {
     if (x >= -1 && x < 1 && fabs(x - 1.0) < 1e-9)
@@ -149,6 +150,7 @@ void menu() {
 }
 
 int main() {
+    setlocale(LC_CTYPE, "RUS");
     int choice;
     do {
         menu();
