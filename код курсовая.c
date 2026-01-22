@@ -1,7 +1,50 @@
+#define _CRT_SECURE_NO_DEPRECATE
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <locale.h>
+
+// --- Прототипы функций ---
+int is_defined(double x);
+double calculate_function(double x, int* ok);
+void calculate_value();
+void build_table();
+void find_extremum();
+void find_x_by_y();
+void derivative_at_point();
+
+// --- Точка входа в программу ---
+int main() {
+    setlocale(LC_CTYPE, "RUS");
+    int choice;
+
+    do {
+        printf("\nГлавное меню:\n");
+        printf("1. Значение функции в точке\n");
+        printf("2. Таблица значений\n");
+        printf("3. Поиск минимума/максимума\n");
+        printf("4. Поиск X по Y\n");
+        printf("5. Производная в точке\n");
+        printf("0. Выход\n");
+        printf("Выбор: ");
+
+        scanf("%d", &choice);
+
+        switch (choice) {
+        case 1: calculate_value(); break;
+        case 2: build_table(); break;
+        case 3: find_extremum(); break;
+        case 4: find_x_by_y(); break;
+        case 5: derivative_at_point(); break;
+        case 0: printf("Выход из программы.\n"); break;
+        default: printf("Неверный пункт меню.\n");
+        }
+    } while (choice != 0);
+
+    return 0;
+}
+
+// --- Реализация функций ---
 
 int is_defined(double x) {
     if (x >= -1 && x < 1 && fabs(x - 1.0) < 1e-9)
@@ -9,7 +52,7 @@ int is_defined(double x) {
     return 1;
 }
 
-double calculate_function(double x, int *ok) {
+double calculate_function(double x, int* ok) {
     *ok = 1;
 
     if (!is_defined(x)) {
@@ -19,9 +62,11 @@ double calculate_function(double x, int *ok) {
 
     if (x < -1) {
         return sinh(x);
-    } else if (x >= -1 && x < 1) {
+    }
+    else if (x >= -1 && x < 1) {
         return (x * x * x - 1) / (x - 1);
-    } else {
+    }
+    else {
         double sum = 0.0;
         for (int n = 0; n <= 11; n++) {
             sum += pow(-1, n) * pow(x, n) / sqrt(n * n + 4);
@@ -39,7 +84,8 @@ void calculate_value() {
     double result = calculate_function(x, &ok);
     if (!ok) {
         printf("Ошибка! Функция не определена в этой точке.\n");
-    } else {
+    }
+    else {
         printf("f(%.5lf) = %.5lf\n", x, result);
     }
 }
@@ -88,7 +134,8 @@ void find_extremum() {
         if (first) {
             min = max = fx;
             first = 0;
-        } else {
+        }
+        else {
             if (fx < min) min = fx;
             if (fx > max) max = fx;
         }
@@ -96,7 +143,8 @@ void find_extremum() {
 
     if (first) {
         printf("Нет допустимых значений на отрезке.\n");
-    } else {
+    }
+    else {
         printf("Минимум: %.5lf\n", min);
         printf("Максимум: %.5lf\n", max);
     }
@@ -133,38 +181,8 @@ void derivative_at_point() {
 
     if (!ok1 || !ok2) {
         printf("Ошибка! Производная не может быть вычислена.\n");
-    } else {
+    }
+    else {
         printf("f'(x) ≈ %.5lf\n", (f2 - f1) / h);
     }
-}
-
-void menu() {
-    printf("\nГлавное меню:\n");
-    printf("1. Значение функции в точке\n");
-    printf("2. Таблица значений\n");
-    printf("3. Поиск минимума/максимума\n");
-    printf("4. Поиск X по Y\n");
-    printf("5. Производная в точке\n");
-    printf("0. Выход\n");
-    printf("Выбор: ");
-}
-
-int main() {
-    setlocale(LC_CTYPE, "RUS");
-    int choice;
-    do {
-        menu();
-        scanf("%d", &choice);
-        switch (choice) {
-            case 1: calculate_value(); break;
-            case 2: build_table(); break;
-            case 3: find_extremum(); break;
-            case 4: find_x_by_y(); break;
-            case 5: derivative_at_point(); break;
-            case 0: printf("Выход из программы.\n"); break;
-            default: printf("Неверный пункт меню.\n");
-        }
-    } while (choice != 0);
-
-    return 0;
 }
