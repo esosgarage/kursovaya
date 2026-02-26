@@ -48,27 +48,28 @@ int main() {
 
 int is_defined(double x) {
     if (x >= -1 && x < 1 && fabs(x - 1.0) < 1e-9)
-        return 0;
+        return 0; // Проверяет специфическое условие: если x в диапазоне [-1; 1) и 
+    // при этом очень близок к 1.0 (с учетом погрешности 1e-9), возвращает 0 (ложь)
     return 1;
 }
 
 double calculate_function(double x, int* ok) {
-    *ok = 1;
-
+    *ok = 1; // Флаг успешного вычисления
+//В данном коде переменная ok играет роль логического флага, где 1 — это истина, а 0 — ложь.
     if (!is_defined(x)) {
-        *ok = 0;
+        *ok = 0; // Если точка не входит в область определения
         return 0.0;
     }
 
     if (x < -1) {
-        return sinh(x);
+        return sinh(x); // Для x < -1 вычисляем гиперболический синус
     }
     else if (x >= -1 && x < 1) {
-        return (x * x * x - 1) / (x - 1);
+        return (x * x * x - 1) / (x - 1); // Для интервала [-1; 1) считаем по формуле
     }
     else {
         double sum = 0.0;
-        for (int n = 0; n <= 11; n++) {
+        for (int n = 0; n <= 11; n++) { // Для x >= 1 вычисляем сумму ряда из 12 членов (от 0 до 11)
             sum += pow(-1, n) * pow(x, n) / sqrt(n * n + 4);
         }
         return sum;
@@ -81,16 +82,16 @@ void calculate_value() {
     printf("Введите x: ");
     scanf("%lf", &x);
 
-    double result = calculate_function(x, &ok);
-    if (!ok) {
+    double result = calculate_function(x, &ok); // Вызываем расчет
+    if (!ok) { 
         printf("Ошибка! Функция не определена в этой точке.\n");
     }
     else {
-        printf("f(%.5lf) = %.5lf\n", x, result);
+        printf("f(%.5lf) = %.5lf\n", x, result); // Выводим результат с 5 знаками
     }
 }
 
-void build_table() {
+void build_table() { // Запрашиваем параметры таблицы: начало, шаг и количество строк
     double start, step;
     int count;
     printf("Введите начало интервала: ");
@@ -108,13 +109,14 @@ void build_table() {
         int ok;
         double fx = calculate_function(x, &ok);
         if (ok)
-            printf("| %7.3lf | %8.3lf |\n", x, fx);
+            printf("| %7.3lf | %8.3lf |\n", x, fx); // Печатаем строку таблицы
         else
-            printf("| %7.3lf |   error |\n", x);
+            printf("| %7.3lf |   error |\n", x); // Если точка недопустима — пишем ошибку
     }
 }
 
-void find_extremum() {
+void find_extremum() { // Проходит по заданному отрезку [a, b] с шагом step
+    // и простым сравнением находит самое маленькое и самое большое значения функции.
     double a, b, step;
     printf("Введите начало отрезка: ");
     scanf("%lf", &a);
@@ -150,7 +152,9 @@ void find_extremum() {
     }
 }
 
-void find_x_by_y() {
+void find_x_by_y() { // Реализует простейший перебор (сканирование) от -10 до 10.
+    // Если разница между вычисленным f(x) и искомым Y меньше точности (eps),
+    // значит мы нашли подходящий X.
     double y, eps;
     printf("Введите Y: ");
     scanf("%lf", &y);
@@ -168,7 +172,9 @@ void find_x_by_y() {
     printf("Значение не найдено.\n");
 }
 
-void derivative_at_point() {
+void derivative_at_point() { // Вычисляет производную в точке x по определению (правая разностная производная):
+    // f'(x) ≈ (f(x + h) - f(x)) / h
+    // Чем меньше h, тем точнее результат.
     double x, h;
     printf("Введите x: ");
     scanf("%lf", &x);
